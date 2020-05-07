@@ -1,13 +1,14 @@
 var app = require('express')();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
+var cors = require("cors");
 
 
+app.use(cors());
 
 app.get('/testroute', (req, res) => {
   res.send('express route functional');
 });
-
 
 
 
@@ -27,6 +28,7 @@ io.on('connection', function(socket){
   socket.on('whose online add', function(nick){
     thisGuy = nick;
     onlineUsers2[thisGuyID] = nick;
+    console.log('whose online add triggered with nick:', nick);
     io.emit('draw whose online now', onlineUsers2);
     io.emit('user connected', nick);
   });
@@ -38,7 +40,9 @@ io.on('connection', function(socket){
   });
   
   socket.on('chat message', function(msg, nick){
-    socket.broadcast.emit('chat message', msg, nick);
+    console.log('chat msg event fired, chat msg is:', msg, 'from nick:', nick);
+    //socket.broadcast.emit('chat message', msg, nick);
+    io.emit('chat message', msg, nick);
   });
 
   socket.on('is typing', function(who) {
