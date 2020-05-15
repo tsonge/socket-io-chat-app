@@ -1,0 +1,7 @@
+.DMWindowDiv {
+  position: fixed;
+  border-radius: 5px;
+  border: 1px solid black;
+  background: white;
+  padding: 10px;
+}

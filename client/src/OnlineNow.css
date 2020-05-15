@@ -1,0 +1,12 @@
+.onlineNowBox {
+    border-radius: 10px; 
+    position: fixed; 
+    border: 1px solid black; 
+    width: 150px; 
+    height: 300px; 
+    top: 10px; 
+    background: white; 
+    right: 10px; 
+    list-style-position: inside; 
+    padding: 10px; 
+}

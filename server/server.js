@@ -21,7 +21,7 @@ io.on('connection', function(socket){
   const thisGuyID = socket.id;
 
   socket.on('DM', function(toWhoID, msg){
-    // console.log('dm received! from: ' + thisGuyID + ' to: ' + toWhoID + ' containing msg: ' + msg);
+    console.log('dm received! from: ' + thisGuyID + ' to: ' + toWhoID + ' containing msg: ' + msg);
     io.to(toWhoID).emit('DM received', thisGuy, thisGuyID, msg);
   });
 
@@ -29,14 +29,14 @@ io.on('connection', function(socket){
     thisGuy = nick;
     onlineUsers2[thisGuyID] = nick;
     console.log('whose online add triggered with nick:', nick);
-    io.emit('draw whose online now', onlineUsers2);
+    io.emit('update whose online now', onlineUsers2);
     io.emit('user connected', nick);
   });
 
   socket.on('disconnect', function(){
     delete onlineUsers2[thisGuyID];
     io.emit('user disconnected', thisGuy);
-    io.emit('draw whose online now', onlineUsers2);
+    io.emit('update whose online now', onlineUsers2);
   });
   
   socket.on('chat message', function(msg, nick){

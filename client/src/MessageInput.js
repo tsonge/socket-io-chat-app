@@ -22,9 +22,9 @@ class MessageInput extends React.Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input autoComplete="off" value={this.state.value} onChange={this.handleChange} />
-        <button>Send</button>
+      <form className="messageInputFormElement" onSubmit={this.handleSubmit}>
+        <input className="messageInputInputElement" autoComplete="off" value={this.state.value} onChange={this.handleChange} />
+        <button className="messageInputSendButton">Send</button>
       </form>
     );
   }
