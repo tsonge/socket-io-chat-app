@@ -17,7 +17,9 @@ class App extends React.Component {
     this.state = {
       messages: [['bob', 'hello'], ['leela', 'hi']], //first item is the nick, second item is the message from that nick.
       onlineNow: {dummySocketID: 'dummyNick'}, // reflects the same object held by server at any given moment. contains all active socket conncections to server. property: socket.id, value: nickname, for each connection
-      DMWindows: { aaabbbccc: { component: <DMWindow IDnickPair={['fakeid','fakenick']} />, messages: [['bb', 'gg'], ['aa', 'gg2']] }, gaabbbccc: { component: <DMWindow IDnickPair={['fakei2','fakenic2']} />, messages: [['b3', 'g3'], ['a3', 'g32']] }  } 
+      // DMWindows: { aaabbbccc: { component: <DMWindow IDnickPair={['fakeid','fakenick']} messages={this.state.DMWindows['aaabbbccc'].messages} />, messages: [['bb', 'gg'], ['aa', 'gg2']] }, gaabbbccc: { component: <DMWindow IDnickPair={['fakei2','fakenic2']} messages={this.state.DMWindows['aaabbbccc'].messages} />, messages: [['b3', 'g3'], ['a3', 'g32']] }  } 
+      DMWindowComponents: {},
+      DMWindowMessages: {}
     };  
  } 
 
@@ -57,15 +59,25 @@ class App extends React.Component {
 
   createNewDMWindow = (IDnickPair) => {
     console.log("createNewDMWindow fired, IDnickPair=", IDnickPair);
-    this.setState({DMWindows: { ...this.state.DMWindows, [IDnickPair[0]]: { component: <DMWindow IDnickPair={IDnickPair} />, messages: [['b4', 'g4'], ['a4', 'g4']] } } }); 
+    // this.setState({DMWindows: { ...this.state.DMWindows, [IDnickPair[0]]: { component: <DMWindow IDnickPair={IDnickPair} />, messages: [['b4', 'g4'], ['a4', 'g4']] } } }); 
+    this.setState({ DMWindowMessages: { ...this.state.DMWindowMessages, 
+        [IDnickPair[0]]: [['b4', 'g4'], ['a4', 'g4']]
+    }}, () => { this.setState({ DMWindowComponents: { ...this.state.DMWindowComponents, 
+        [IDnickPair[0]]: 
+            <DMWindow 
+                 IDnickPair={IDnickPair} 
+                 messages={this.state.DMWindowMessages[IDnickPair[0]]} 
+            /> 
+        }});  
+    });
   }
 
 
   render() {
 
     const DMWindowArray = [];
-    for (const DMWindowMessageComponentPair of Object.values(this.state.DMWindows)) {
-      DMWindowArray.push(DMWindowMessageComponentPair.component);
+    for (const component of Object.values(this.state.DMWindowComponents)) {
+      DMWindowArray.push(component);
     }
 
     return (

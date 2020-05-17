@@ -27,10 +27,12 @@ class DMWindow extends React.Component {
       <Draggable>
         <div className="DMWindowDiv">
           <p> { "----DMs with: " + this.props.IDnickPair[1] + " ----" } </p>
+          <ul>
+            {this.props.messages.map((msg, index) => <li key={index}>{msg[0]} :: {msg[1]}</li>)}
+          </ul>
           <form onSubmit={this.handleSubmit}>
             <input className="DMInputElement" type="text" value={this.state.value} onChange={this.handleChange} />
           </form>
-          <p>I am a div</p>
         </div>
       </Draggable>
     ); 
