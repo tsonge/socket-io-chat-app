@@ -17,9 +17,9 @@ class App extends React.Component {
     this.state = {
       messages: [['bob', 'hello'], ['leela', 'hi']], //first item is the nick, second item is the message from that nick.
       onlineNow: {dummySocketID: 'dummyNick'}, // reflects the same object held by server at any given moment. contains all active socket conncections to server. property: socket.id, value: nickname, for each connection
-      DMWindows: [ ]
+      DMWindows: { aaabbbccc: { component: <DMWindow IDnickPair={['fakeid','fakenick']} />, messages: [['bb', 'gg'], ['aa', 'gg2']] }, gaabbbccc: { component: <DMWindow IDnickPair={['fakei2','fakenic2']} />, messages: [['b3', 'g3'], ['a3', 'g32']] }  } 
     };  
-  }
+ } 
 
   componentDidMount() {
     const socket = io('http://localhost:4000');
@@ -37,6 +37,11 @@ class App extends React.Component {
       this.setState({ onlineNow: userList });
     });
 
+    socket.on('DM received', (fromNick, fromID, msg) => {
+      console.log('we recieved a DM, fromNick=', fromNick, ' id=', fromID, ' msg=', msg);
+    });
+
+
     fetch("http://localhost:4000/testroute")
       .then(res => res.text())
       .then(res => {console.log(res)});
@@ -52,17 +57,20 @@ class App extends React.Component {
 
   createNewDMWindow = (IDnickPair) => {
     // console.log("createNewDMWindow fired, IDnickPair=", IDnickPair);
-    this.setState({ DMWindows: [...this.state.DMWindows, <DMWindow key={IDnickPair[0]}  IDnickPair={IDnickPair} emitDMmessageFunc={this.emitDMmessage} /> ] }) ;
   }
 
 
   render() {
 
+    const DMWindowArray = [];
+    for (const DMWindowMessageComponentPair of Object.values(this.state.DMWindows)) {
+      DMWindowArray.push(DMWindowMessageComponentPair.component);
+    }
 
     return (
       <React.Fragment>
       <OnlineNow userList={this.state.onlineNow} createNewDMWindowFunc={this.createNewDMWindow} />
-      { this.state.DMWindows }
+      { DMWindowArray }
       <Messages messages={this.state.messages} />
       <MessageInput emitMsgFunc={this.emitMessage} />
       </React.Fragment>

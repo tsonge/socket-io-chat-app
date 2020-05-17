@@ -18,6 +18,7 @@ class DMWindow extends React.Component {
   handleSubmit(event) {
     this.props.emitDMmessageFunc(this.props.IDnickPair[0], this.state.value);
     event.preventDefault();
+    this.setState({value: ''});
   }
 
  
@@ -27,7 +28,7 @@ class DMWindow extends React.Component {
         <div className="DMWindowDiv">
           <p> { "----DMs with: " + this.props.IDnickPair[1] + " ----" } </p>
           <form onSubmit={this.handleSubmit}>
-            <input type="text" value={this.state.value} onChange={this.handleChange} />
+            <input className="DMInputElement" type="text" value={this.state.value} onChange={this.handleChange} />
           </form>
           <p>I am a div</p>
         </div>

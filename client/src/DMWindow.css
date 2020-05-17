@@ -5,3 +5,13 @@
   background: white;
   padding: 10px;
 }
+
+.DMInputElement { 
+  outline: none; 
+  border-radius: 5px; 
+  border: 1px solid black; 
+  padding: 3px; 
+  width: 90%; 
+  margin-right: .5%; 
+  height: 33px; 
+}
