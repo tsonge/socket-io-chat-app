@@ -56,7 +56,8 @@ class App extends React.Component {
   }
 
   createNewDMWindow = (IDnickPair) => {
-    // console.log("createNewDMWindow fired, IDnickPair=", IDnickPair);
+    console.log("createNewDMWindow fired, IDnickPair=", IDnickPair);
+    this.setState({DMWindows: { ...this.state.DMWindows, [IDnickPair[0]]: { component: <DMWindow IDnickPair={IDnickPair} />, messages: [['b4', 'g4'], ['a4', 'g4']] } } }); 
   }
 
 
