@@ -16,7 +16,8 @@ class DMWindow extends React.Component {
   }
 
   handleSubmit(event) {
-    this.props.emitDMmessageFunc(this.props.IDnickPair[0], this.state.value);
+    console.log('called');
+    this.props.emitDMMessageFunc(this.props.IDnickPair[0], this.state.value);
     event.preventDefault();
     this.setState({value: ''});
   }
