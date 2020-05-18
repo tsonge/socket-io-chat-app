@@ -65,13 +65,24 @@ class App extends React.Component {
     }}, () => { this.setState({ DMWindowComponents: { ...this.state.DMWindowComponents, 
         [IDnickPair[0]]: 
             <DMWindow 
+                 key={IDnickPair[0]}
                  IDnickPair={IDnickPair} 
                  messages={this.state.DMWindowMessages[IDnickPair[0]]} 
+                 closeButtonFunc={this.closeDMWindow}
             /> 
         }});  
     });
   }
 
+  closeDMWindow = (id) => {
+    const newDMComponents = {...this.state.DMWindowComponents};
+    delete newDMComponents[id];
+    const newDMMessages = {...this.state.DMWindowMessages};
+    delete newDMMessages[id];
+    this.setState({DMWindowComponents: newDMComponents}, () => {
+      this.setState({DMWindowMessages: newDMMessages}); 
+    });
+  }
 
   render() {
 

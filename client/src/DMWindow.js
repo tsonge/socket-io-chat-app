@@ -33,6 +33,7 @@ class DMWindow extends React.Component {
           <form onSubmit={this.handleSubmit}>
             <input className="DMInputElement" type="text" value={this.state.value} onChange={this.handleChange} />
           </form>
+          <button onClick={ () => this.props.closeButtonFunc(this.props.IDnickPair[0]) }>Close</button> 
         </div>
       </Draggable>
     ); 
