@@ -23,6 +23,7 @@ io.on('connection', function(socket){
   socket.on('DM', function(toWhoID, msg){
     console.log('dm received! from: ' + thisGuyID + ' to: ' + toWhoID + ' containing msg: ' + msg);
     io.to(toWhoID).emit('DM received', thisGuy, thisGuyID, msg);
+    io.to(thisGuyID).emit('DM received', thisGuy, toWhoID, msg);
   });
 
   socket.on('whose online add', function(nick){

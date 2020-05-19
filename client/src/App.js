@@ -107,7 +107,7 @@ class App extends React.Component {
     }); */
     
     this.setState({DMWindowData: { ...this.state.DMWindowData, 
-        [IDnickPair[0]]: {IDnickPair: IDnickPair, messages: [['b4', 'g4'], ['a4', 'g4']]} 
+        [IDnickPair[0]]: {IDnickPair: IDnickPair, messages: []} 
     }});
     
   }

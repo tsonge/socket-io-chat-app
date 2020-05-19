@@ -27,14 +27,14 @@ class DMWindow extends React.Component {
     return (
       <Draggable>
         <div className="DMWindowDiv">
-          <p> { "----DMs with: " + this.props.IDnickPair[1] + " ----" } </p>
-          <ul>
+          <p> { "----Direct Messages with: " + this.props.IDnickPair[1] + " ----" } </p>
+          <ul className="DMul" >
             {this.props.messages.map((msg, index) => <li key={index}>{msg[0]} :: {msg[1]}</li>)}
           </ul>
           <form onSubmit={this.handleSubmit}>
             <input className="DMInputElement" type="text" value={this.state.value} onChange={this.handleChange} />
           </form>
-          <button onClick={ () => this.props.closeButtonFunc(this.props.IDnickPair[0]) }>Close</button> 
+          <button onClick={ () => this.props.closeButtonFunc(this.props.IDnickPair[0]) }>Close DM</button> 
         </div>
       </Draggable>
     ); 
