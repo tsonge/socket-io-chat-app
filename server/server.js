@@ -1,10 +1,14 @@
 var app = require('express')();
+var express = require('express');
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var cors = require("cors");
 
-
 app.use(cors());
+
+var distDir = __dirname + "../client/build/";
+app.use(express.static(distDir));
+
 let onlineUsers = {};
 
 io.on('connection', function(socket){
