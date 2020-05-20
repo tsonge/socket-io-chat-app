@@ -27,7 +27,7 @@ class DMWindow extends React.Component {
     return (
       <Draggable>
         <div className="DMWindowDiv">
-          <p> { "----Direct Messages with: " + this.props.IDnickPair[1] + " ----" } </p>
+          <div className="DMWindowHeader"> { "Direct Messages with: " + this.props.IDnickPair[1] } </div>
           <ul className="DMul" >
             {this.props.messages.map((msg, index) => <li key={index}>{msg[0]} :: {msg[1]}</li>)}
           </ul>

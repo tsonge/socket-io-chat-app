@@ -3,25 +3,19 @@ import './App.css';
 import io from 'socket.io-client';
 import Messages from './Messages.js'; 
 import MessageInput from './MessageInput.js'; 
-import Draggable from 'react-draggable';
 import OnlineNow from './OnlineNow.js';
 import DMWindow from './DMWindow.js';
-
-const ChildComponent = props => <div>{"I am child "}</div>;
 
 class App extends React.Component {
  
   constructor(props) {
     super(props);
-    console.log('App component constructor called');
+    // console.log('App component constructor called');
     this.state = {
       messages: [['bob', 'hello'], ['leela', 'hi']], //first item is the nick, second item is the message from that nick.
       onlineNow: {dummySocketID: 'dummyNick'}, // reflects the same object held by server at any given moment. contains all active socket conncections to server. property: socket.id, value: nickname, for each connection
-      // DMWindows: { aaabbbccc: { component: <DMWindow IDnickPair={['fakeid','fakenick']} messages={this.state.DMWindows['aaabbbccc'].messages} />, messages: [['bb', 'gg'], ['aa', 'gg2']] }, gaabbbccc: { component: <DMWindow IDnickPair={['fakei2','fakenic2']} messages={this.state.DMWindows['aaabbbccc'].messages} />, messages: [['b3', 'g3'], ['a3', 'g32']] }  } 
-      DMWindowComponents: {},
-      DMWindowMessages: {},
-      DMWindowIDnickPairs: {},
-      DMWindowData: {}
+      DMWindowData: {},
+      whoIsTyping: []
     };  
  } 
 
@@ -42,19 +36,7 @@ class App extends React.Component {
     });
 
     socket.on('DM received', (fromNick, fromID, msg) => {
-      console.log('we recieved a DM, fromNick=', fromNick, ' id=', fromID, ' msg=', msg);
-      /* this.setState({DMWindowMessages: {...this.state.DMWindowMessages, 
-        [fromID]: [ ...this.state.DMWindowMessages[fromID] , [fromNick, msg]]   
-      }}, () => {this.setState({DMWindowComponents:{...this.state.DMWindowComponents, 
-        [IDnickPair[0]]: 
-            <DMWindow 
-                 key={IDnickPair[0]}
-                 IDnickPair={IDnickPair} 
-                 messages={this.state.DMWindowMessages[IDnickPair[0]]} 
-                 closeButtonFunc={this.closeDMWindow}
-                 emitDMMessageFunc={this.emitDMMessage}
-            /> 
-      }});}); */
+      // console.log('we recieved a DM, fromNick=', fromNick, ' id=', fromID, ' msg=', msg);
       if (fromID in this.state.DMWindowData) {
         this.setState({DMWindowData: {...this.state.DMWindowData, 
           [fromID]: { IDnickPair: [fromID, fromNick], 
@@ -70,42 +52,41 @@ class App extends React.Component {
       }
     });
 
+    socket.on('somebody is typing', who => {
 
-    fetch("http://localhost:4000/testroute")
-      .then(res => res.text())
-      .then(res => {console.log(res)});
+      if ( this.state.whoIsTyping.includes(who) ) {
+        return;
+      } 
+    
+      this.setState({whoIsTyping: [...this.state.whoIsTyping, who]});
+
+      setTimeout(() => { 
+        const newWhoIsTyping = [...this.state.whoIsTyping];
+        const index = newWhoIsTyping.indexOf(who);
+        if (index !== -1) newWhoIsTyping.splice(index, 1);
+        this.setState({whoIsTyping: newWhoIsTyping}) 
+      }, 2500);
+
+    });
+
   }
+
+  isTypingEmit = () => {
+    this.state.socket.emit('is typing', this.state.ourNick);
+  }
+
 
   emitMessage = (message) => {
     this.state.socket.emit('chat message', message, this.state.ourNick);
   }
 
   emitDMMessage = (toID, message) => {
-    console.log('EMIT DM MESSAGE CALLED!!');
-    // debugger;
     this.state.socket.emit('DM', toID, message);
   }
 
   createNewDMWindow = (IDnickPair) => {
     console.log("createNewDMWindow fired, IDnickPair=", IDnickPair);
 
-    // debugger;
-    // this.setState({DMWindows: { ...this.state.DMWindows, [IDnickPair[0]]: { component: <DMWindow IDnickPair={IDnickPair} />, messages: [['b4', 'g4'], ['a4', 'g4']] } } }); 
-
-    /* this.setState({ DMWindowMessages: { ...this.state.DMWindowMessages, 
-        [IDnickPair[0]]: [['b4', 'g4'], ['a4', 'g4']]
-    }}, () => { this.setState({ DMWindowComponents: { ...this.state.DMWindowComponents, 
-        [IDnickPair[0]]: 
-            <DMWindow 
-                 key={IDnickPair[0]}
-                 IDnickPair={IDnickPair} 
-                 messages={this.state.DMWindowMessages[IDnickPair[0]]} 
-                 closeButtonFunc={this.closeDMWindow}
-                 emitDMMessageFunc={this.emitDMMessage}
-            /> 
-        }});  
-    }); */
-    
     this.setState({DMWindowData: { ...this.state.DMWindowData, 
         [IDnickPair[0]]: {IDnickPair: IDnickPair, messages: []} 
     }});
@@ -113,14 +94,6 @@ class App extends React.Component {
   }
 
   closeDMWindow = (id) => {
-    /*const newDMComponents = {...this.state.DMWindowComponents};
-    delete newDMComponents[id];
-    const newDMComponents = {...this.state.DMWindowComponents};
-    delete newDMComponents[id];
-    this.setState({DMWindowComponents: newDMComponents}, () => {
-    this.setState({DMWindowMessages: newDMMessages}); 
-    });*/
-    
     const newDMWindowData = {...this.state.DMWindowData};
     delete newDMWindowData[id];
     this.setState({DMWindowData: newDMWindowData});
@@ -141,12 +114,24 @@ class App extends React.Component {
       );
     }
 
+
+    let isTypingDiv;
+
+    if (this.state.whoIsTyping.length > 0) {
+      isTypingDiv = <div className="isTypingDiv">{this.state.whoIsTyping.map(nick => nick + ', ')} is typing...</div>; 
+    } else {
+      isTypingDiv = <div className="isTypingDiv"></div>; 
+    }
+
+
+
     return (
       <React.Fragment>
       <OnlineNow userList={this.state.onlineNow} createNewDMWindowFunc={this.createNewDMWindow} />
       { DMWindowArray }
+      { isTypingDiv }
       <Messages messages={this.state.messages} />
-      <MessageInput emitMsgFunc={this.emitMessage} />
+      <MessageInput emitMsgFunc={this.emitMessage} isTypingEmitFunc={this.isTypingEmit} />
       </React.Fragment>
     );
   }

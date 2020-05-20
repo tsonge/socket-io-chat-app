@@ -5,15 +5,7 @@ var cors = require("cors");
 
 
 app.use(cors());
-
-app.get('/testroute', (req, res) => {
-  res.send('express route functional');
-});
-
-
-
-
-let onlineUsers2 = {};
+let onlineUsers = {};
 
 io.on('connection', function(socket){
   console.log('new io connection to server');
@@ -28,20 +20,20 @@ io.on('connection', function(socket){
 
   socket.on('whose online add', function(nick){
     thisGuy = nick;
-    onlineUsers2[thisGuyID] = nick;
+    onlineUsers[thisGuyID] = nick;
     console.log('whose online add triggered with nick:', nick);
-    io.emit('update whose online now', onlineUsers2);
+    io.emit('update whose online now', onlineUsers);
     io.emit('user connected', nick);
   });
 
   socket.on('disconnect', function(){
-    delete onlineUsers2[thisGuyID];
+    delete onlineUsers[thisGuyID];
     io.emit('user disconnected', thisGuy);
-    io.emit('update whose online now', onlineUsers2);
+    io.emit('update whose online now', onlineUsers);
   });
   
   socket.on('chat message', function(msg, nick){
-    console.log('chat msg event fired, chat msg is:', msg, 'from nick:', nick);
+    // console.log('chat msg event fired, chat msg is:', msg, 'from nick:', nick);
     //socket.broadcast.emit('chat message', msg, nick);
     io.emit('chat message', msg, nick);
   });
