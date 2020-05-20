@@ -1,6 +1,4 @@
-a chat application built with Socket.io and React.
-
-[live here]:(https://socket-io-chat-app-js.herokuapp.com/)
+a chat application built with Socket.io and React. [live here]:(https://socket-io-chat-app-js.herokuapp.com/)
 
 features: 
 
