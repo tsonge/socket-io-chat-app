@@ -20,7 +20,7 @@ class App extends React.Component {
  } 
 
   componentDidMount() {
-    const socket = io('https://socket-io-chat-app-js.herokuapp.com/socket');
+    const socket = io();
     const ourNick = prompt("Please enter your nick", "Harry Potter");
 
     this.setState({socket, ourNick}); // same as {socket: socket, ourNick: ourNick}
