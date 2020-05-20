@@ -12,7 +12,7 @@ class App extends React.Component {
     super(props);
     // console.log('App component constructor called');
     this.state = {
-      messages: [['bob', 'hello'], ['leela', 'hi']], //first item is the nick, second item is the message from that nick.
+      messages: [], //first item is the nick, second item is the message from that nick.
       onlineNow: {dummySocketID: 'dummyNick'}, // reflects the same object held by server at any given moment. contains all active socket conncections to server. property: socket.id, value: nickname, for each connection
       DMWindowData: {},
       whoIsTyping: []

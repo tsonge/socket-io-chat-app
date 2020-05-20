@@ -6,7 +6,7 @@ var cors = require("cors");
 
 app.use(cors());
 
-var distDir = __dirname + "../client/build/";
+var distDir = __dirname + "/build/";
 app.use(express.static(distDir));
 
 let onlineUsers = {};
@@ -48,6 +48,6 @@ io.on('connection', function(socket){
 
 });
 
-http.listen(4000, function(){
-  console.log('listening on *:4000');
+http.listen(process.env.PORT || 4000, function(){
+  console.log('listening on PORT or *:4000');
 });
